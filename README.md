@@ -97,3 +97,32 @@ flowchart TD
   01/02 --> fbank_ms
   01/02 --> mfcc_ms
 ```
+
+### 5.5節
+
+```mermaid
+flowchart TD
+  train_small["data/label/train_small/"]
+  mean_std[01/compute_features/mfcc/train_small/mean_std.txt]
+
+  03/00(03gmm_hmm/00_make_label.py)
+  03/01(03gmm_hmm/01_make_proto.py)
+  03/02(03gmm_hmm/02_init_hmm.py)
+  phone_list["03gmm_hmm/exp/data/{dev,train_small}/phone_list"]
+  text_int["03gmm_hmm/exp/data/{dev,train_small}/text_int"]
+  proto[03_gmm_hmm/model_3state_1mix/hmmproto]
+  hmm_init[03_gmm_hmm/exp/model_3state_1mix/0.hmm]
+
+  train_small --> 03/00
+  03/00 --> phone_list
+  03/00 --> text_int
+
+  phone_list --> 03/01
+  03/01 --> proto
+
+  mean_std --> 03/02
+  proto --> 03/02
+  03/02 --> hmm_init
+```
+
+[2022-08-03 21:15:03] まだ途中（単峰正規分布を用いたHMMの学習、の手前まで）
