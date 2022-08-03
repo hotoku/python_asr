@@ -8,3 +8,4 @@ data
 */*.png
 02dp_matching/alignment.txt
 .python-version
+.dir-locals.el
