@@ -7,3 +7,4 @@ data
 */__pycache__
 */*.png
 02dp_matching/alignment.txt
+.python-version
