@@ -48,7 +48,9 @@ GMM のパラメータ（混合重み、平均値ベクトル、分散共分散�
 
 - soxが必要. `brew sox`でインストール可能
 
-## 3章のデータ準備の流れ
+## サンプルコードの処理の流れ
+
+### 3.1節
 
 ```mermaid
 flowchart TD
@@ -74,4 +76,24 @@ flowchart TD
   00/03 --> dev[data/label/dev]
   00/03 --> test[data/label/test]
 
+```
+
+### 3.7節
+
+```mermaid
+flowchart TD
+  wav.scp["data/label/{train_small, train_large, dev, test}/wav.scp"]
+  01/00(01compute_features/01_compute_fbank.py)
+  wav.scp --> 01/00
+  01/00 --> fbank["01compute_features/fbank/{train_small, train_large, dev, test}"]
+  01/01(01compute_features/01_compute_mfcc.py)
+  wav.scp --> 01/01
+  01/01 --> mfcc["01compute_features/mfcc/{train_small, train_large, dev, test}"]
+  01/02("01compute_features/02_compute_mean_std.py")
+  fbank --> 01/02
+  mfcc --> 01/02
+  fbank_ms["01compute_features/fbank/{train_small, train_large}/mean_std.txt"]
+  mfcc_ms["01compute_features/mfcc/{train_small, train_large}/mean_std.txt"]
+  01/02 --> fbank_ms
+  01/02 --> mfcc_ms
 ```
