@@ -34,17 +34,20 @@ if __name__ == "__main__":
     # サンプリング周波数を 16000Hz に変換するよう設定する
     tfm.convert(samplerate=16000)
 
+    num_wav = 5000
+
     # wavデータのリストファイルを書き込みモードで開き，以降の処理を実施する
     with open(os.path.join(out_scp_dir, 'wav.scp'), mode='w') as scp_file:
         # BASIC5000_0001.wav ~ BASIC5000_5000.wav に対して処理を繰り返し実行
-        for i in range(5000):
+        for i in range(num_wav):
             filename = 'BASIC5000_%04d' % (i+1)
             # 変換元のオリジナルデータ (48000Hz)のファイル名
             wav_path_in = os.path.join(original_wav_dir, filename+'.wav')
             # 変換後のデータ(16000Hz)の保存ファイル名
             wav_path_out = os.path.join(out_wav_dir, filename+'.wav')
 
-            print(wav_path_in)
+            if (i + 1) % 500 == 0:
+                print(f"finished {i + 1}/{num_wav}")
             # ファイルが存在しない場合はエラー
             if not os.path.exists(wav_path_in):
                 print('Error: Not found %s' % (wav_path_in))
