@@ -570,29 +570,29 @@ if __name__ == "__main__":
 
     # ベストエポックの情報
     # (validationの損失が最小だったエポック)
-    print('Best epoch model (%d-th epoch)'\
-          ' -> %s/best_model.pt' \
+    print('Best epoch model (%d-th epoch)'
+          ' -> %s/best_model.pt'
           % (best_epoch+1, output_dir))
-    log_file.write('Best epoch model (%d-th epoch)'\
-          ' -> %s/best_model.pt\n' \
-          % (best_epoch+1, output_dir))
+    log_file.write('Best epoch model (%d-th epoch)'
+                   ' -> %s/best_model.pt\n'
+                   % (best_epoch+1, output_dir))
     for phase in ['train', 'validation']:
         # ベストエポックの損失値を出力
-        print('    %s loss: %f' \
+        print('    %s loss: %f'
               % (phase, loss_history[phase][best_epoch]))
-        log_file.write('    %s loss: %f\n' \
-              % (phase, loss_history[phase][best_epoch]))
+        log_file.write('    %s loss: %f\n'
+                       % (phase, loss_history[phase][best_epoch]))
         # ベストエポックのエラー率を出力
         if evaluate_error[phase]:
-            print('    %s token error rate: %f %%' \
+            print('    %s token error rate: %f %%'
                   % (phase, error_history[phase][best_epoch]))
-            log_file.write('    %s token error rate: %f %%\n' \
-                  % (phase, error_history[phase][best_epoch]))
+            log_file.write('    %s token error rate: %f %%\n'
+                           % (phase, error_history[phase][best_epoch]))
         else:
-            print('    %s token error rate: '\
+            print('    %s token error rate: '
                   '(not evaluated)' % (phase))
-            log_file.write('    %s token error rate: '\
-                  '(not evaluated)\n' % (phase))
+            log_file.write('    %s token error rate: '
+                           '(not evaluated)\n' % (phase))
 
     # 損失値の履歴(Learning Curve)グラフにして保存する
     fig1 = plt.figure()
@@ -617,5 +617,3 @@ if __name__ == "__main__":
 
     # ログファイルを閉じる
     log_file.close()
-
-
