@@ -26,14 +26,14 @@ def token_to_int(label_file_str,
     '''
     # 各ファイルを開く
     with open(label_file_str, mode='r') as label_in, \
-             open(label_file_int, mode='w') as label_out, \
-             open(unknown_list_file, mode='w') as unk_list:
+            open(label_file_int, mode='w') as label_out, \
+            open(unknown_list_file, mode='w') as unk_list:
         # ラベルファイルを一行ずつ読み込む
         for line in label_in:
             # 読み込んだ行をスペースで区切り，
             # リスト型の変数にする
             text = line.split()
-            
+
             # リストの0番目の要素は発話IDなので，そのまま出力する
             label_out.write('%s' % text[0])
 
@@ -54,7 +54,7 @@ def token_to_int(label_file_str,
                 else:
                     # 存在する場合
                     # 対応する番号を出力
-                    label_out.write(' %d' \
+                    label_out.write(' %d'
                                     % (token_list.index(u) + 1))
             label_out.write('\n')
 
@@ -63,7 +63,7 @@ def token_to_int(label_file_str,
 # メイン関数
 #
 if __name__ == "__main__":
-    
+
     # トークンの単位
     # phone:音素  kana:かな  char:キャラクター
     unit_set = ['phone', 'kana', 'char']
@@ -89,11 +89,11 @@ if __name__ == "__main__":
     # 実験ディレクトリ
     # train_smallを使った時とtrain_largeを使った時で
     # 異なる実験ディレクトリにする
-    exp_dir = './exp_' + os.path.basename(label_dir_train) 
+    exp_dir = './exp_' + os.path.basename(label_dir_train)
 
     # 処理結果の出力先ディレクトリ
     output_dir = os.path.join(exp_dir, 'data')
-    
+
     # phone, kana, char それぞれに対して処理
     for uid, unit in enumerate(unit_set):
         # 出力先ディレクトリ
@@ -118,7 +118,7 @@ if __name__ == "__main__":
                 # リスト型の変数にする
                 # 0番目は発話IDなので，1番目以降を取り出す
                 text = line.split()[1:]
-                
+
                 # トークンリストに結合
                 token_list += text
 
@@ -139,7 +139,7 @@ if __name__ == "__main__":
         token_list.insert(0, unknown_token)
 
         # トークンリストをファイルに出力する
-        with open(os.path.join(out_dir, 'token_list'), 
+        with open(os.path.join(out_dir, 'token_list'),
                   mode='w') as token_file:
             for i, u in enumerate(token_list):
                 # 「トークン 対応する番号」を記述
@@ -171,7 +171,7 @@ if __name__ == "__main__":
             label_int = os.path.join(out_dir,
                                      'label_'+name)
             # 未知トークンリストの出力先
-            unknown_list = os.path.join(out_dir, 
+            unknown_list = os.path.join(out_dir,
                                         'unknown_token_'+name)
             # ラベルファイルの文字->数値変換処理の実行
             token_to_int(label_str,
@@ -179,4 +179,3 @@ if __name__ == "__main__":
                          unknown_list,
                          token_list,
                          silence_tokens)
-
