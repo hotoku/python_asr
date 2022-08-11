@@ -33,19 +33,19 @@ if __name__ == "__main__":
 
     # 音声ファイル(jsutコーパス. zip形式)をダウンロード
     data_archive = os.path.join(data_dir, 'jsut-data.zip')
-    print('download jsut-data start')
-    urlretrieve('http://ss-takashi.sakura.ne.jp/corpus/jsut_ver1.1.zip',
-                data_archive)
-    print('download jsut-data finished')
+    if not os.path.exists(data_archive):
+        print('download jsut-data start')
+        urlretrieve('http://ss-takashi.sakura.ne.jp/corpus/jsut_ver1.1.zip',
+                    data_archive)
+        print('download jsut-data finished')
+    else:
+        print('jsut-data archive already exists. Skip downloading.')
 
     # ダウンロードしたデータを展開する
     print('extract jsut-data start')
     with zipfile.ZipFile(data_archive) as data_zip:
         data_zip.extractall(data_dir)
     print('extract jsut-data finished')
-
-    # zipファイルを削除する
-    os.remove(data_archive)
 
     # jsutコーパスのラベルデータをダウンロード
     label_archive = os.path.join(data_dir, 'jsut-label.zip')
