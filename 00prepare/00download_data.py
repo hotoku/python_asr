@@ -6,6 +6,9 @@
 # https://sites.google.com/site/shinnosuketakamichi/publication/jsut
 #
 
+from datetime import datetime
+
+
 # ファイルをダウンロードするためのモジュールをインポート
 from urllib.request import urlretrieve
 
@@ -19,7 +22,9 @@ import os
 # メイン関数
 #
 if __name__ == "__main__":
-    
+    start_time = datetime.now()
+    print(f"start: {start_time}")
+
     # データの置き場を定義
     data_dir = '../data/original'
 
@@ -29,7 +34,7 @@ if __name__ == "__main__":
     # 音声ファイル(jsutコーパス. zip形式)をダウンロード
     data_archive = os.path.join(data_dir, 'jsut-data.zip')
     print('download jsut-data start')
-    urlretrieve('http://ss-takashi.sakura.ne.jp/corpus/jsut_ver1.1.zip', 
+    urlretrieve('http://ss-takashi.sakura.ne.jp/corpus/jsut_ver1.1.zip',
                 data_archive)
     print('download jsut-data finished')
 
@@ -59,4 +64,6 @@ if __name__ == "__main__":
     os.remove(label_archive)
 
     print('all processes finished')
-
+    end_time = datetime.now()
+    print(f"end: {end_time}")
+    print(f"elapsed: {end_time - start_time}")
