@@ -4,6 +4,8 @@
 # CTCを学習します．
 #
 
+import argparse
+
 # Pytorchを用いた処理に必要なモジュールをインポート
 import torch
 import torch.nn as nn
@@ -65,6 +67,13 @@ def ctc_simple_decode(int_vector, token_list):
 # メイン関数
 #
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='01_get_token')
+    parser.add_argument('size', type=str,
+                        help='size of training data. "small" or "large"')
+    parser.add_argument('unit', type=str,
+                        help='type of token. "phone", "kana", or "char"')
+
+    args = parser.parse_args()
 
     #
     # 設定ここから
@@ -72,10 +81,10 @@ if __name__ == "__main__":
 
     # トークンの単位
     # phone:音素  kana:かな  char:キャラクター
-    unit = 'phone'
+    unit = args.unit
 
     # 学習データの特徴量(feats.scp)が存在するディレクトリ
-    feat_dir_train = '../01compute_features/fbank/train_small'
+    feat_dir_train = f'../01compute_features/fbank/train_{args.size}'
     # 開発データの特徴量(Feats.scp)が存在するディレクトリ
     feat_dir_dev = '../01compute_features/fbank/dev'
 
