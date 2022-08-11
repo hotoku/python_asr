@@ -8,6 +8,7 @@
 
 # osモジュールをインポート
 import os
+import argparse
 
 
 def token_to_int(label_file_str,
@@ -63,6 +64,11 @@ def token_to_int(label_file_str,
 # メイン関数
 #
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='01_get_token')
+    parser.add_argument('size', type=str,
+                        help='size of training data. "small" or "large"')
+
+    args = parser.parse_args()
 
     # トークンの単位
     # phone:音素  kana:かな  char:キャラクター
@@ -82,7 +88,7 @@ if __name__ == "__main__":
     unknown_token = '<unk>'
 
     # ラベルファイルの存在するフォルダ
-    label_dir_train = '../data/label/train_small'
+    label_dir_train = f'../data/label/train_{args.size}'
     label_dir_dev = '../data/label/dev'
     label_dir_test = '../data/label/test'
 
