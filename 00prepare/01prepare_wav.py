@@ -15,7 +15,7 @@ import os
 # メイン関数
 #
 if __name__ == "__main__":
-    
+
     # wavファイルが展開されたディレクトリ
     original_wav_dir = '../data/original/jsut_ver1.1/basic5000/wav'
 
@@ -51,10 +51,9 @@ if __name__ == "__main__":
                 exit()
 
             # サンプリング周波数の変換と保存を実行する
-            tfm.build_file(input_filepath=wav_path_in, 
+            tfm.build_file(input_filepath=wav_path_in,
                            output_filepath=wav_path_out)
 
             # wavファイルのリストを書き込む
-            scp_file.write('%s %s\n' % 
+            scp_file.write('%s %s\n' %
                            (filename, os.path.abspath(wav_path_out)))
-        
