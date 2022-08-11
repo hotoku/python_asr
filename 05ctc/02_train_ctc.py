@@ -5,6 +5,7 @@
 #
 
 import argparse
+from datetime import datetime
 
 # Pytorchを用いた処理に必要なモジュールをインポート
 import torch
@@ -339,7 +340,7 @@ if __name__ == "__main__":
             break
 
         # エポック数を表示
-        print('epoch %d/%d:' % (epoch+1, max_num_epoch))
+        print('[%s] epoch %d/%d:' % (datetime.now(), epoch+1, max_num_epoch))
         log_file.write('\n%d\t' % (epoch+1))
 
         # trainフェーズとvalidationフェーズを交互に実施する
