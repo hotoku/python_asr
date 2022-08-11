@@ -65,7 +65,7 @@ def ctc_simple_decode(int_vector, token_list):
 # メイン関数
 #
 if __name__ == "__main__":
-    
+
     #
     # 設定ここから
     #
@@ -81,8 +81,8 @@ if __name__ == "__main__":
 
     # 実験ディレクトリ
     # train_set_name = 'train_small' or 'train_large'
-    train_set_name = os.path.basename(feat_dir_train) 
-    exp_dir = './exp_' + os.path.basename(feat_dir_train) 
+    train_set_name = os.path.basename(feat_dir_train)
+    exp_dir = './exp_' + os.path.basename(feat_dir_train)
 
     # 学習/開発データの特徴量リストファイル
     feat_scp_train = os.path.join(feat_dir_train, 'feats.scp')
@@ -93,7 +93,7 @@ if __name__ == "__main__":
                                'label_'+train_set_name)
     label_dev = os.path.join(exp_dir, 'data', unit,
                              'label_dev')
-    
+
     # 訓練データから計算された特徴量の平均/標準偏差ファイル
     mean_std_file = os.path.join(feat_dir_train, 'mean_std.txt')
 
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     # 設定を辞書形式にする
     config = {'rnn_type': rnn_type,
               'num_layers': num_layers,
-              'sub_sample': sub_sample, 
+              'sub_sample': sub_sample,
               'hidden_dim': hidden_dim,
               'projection_dim': projection_dim,
               'bidirectional': bidirectional,
@@ -174,10 +174,10 @@ if __name__ == "__main__":
               'max_num_epoch': max_num_epoch,
               'clip_grad_threshold': clip_grad_threshold,
               'initial_learning_rate': initial_learning_rate,
-              'lr_decay_start_epoch': lr_decay_start_epoch, 
+              'lr_decay_start_epoch': lr_decay_start_epoch,
               'lr_decay_factor': lr_decay_factor,
               'early_stop_threshold': early_stop_threshold
-             }
+              }
 
     # 設定をJSON形式で保存する
     conf_file = os.path.join(output_dir, 'config.json')
@@ -196,10 +196,10 @@ if __name__ == "__main__":
         feat_mean = mean_line.split()
         feat_std = std_line.split()
         # numpy arrayに変換
-        feat_mean = np.array(feat_mean, 
-                                dtype=np.float32)
-        feat_std = np.array(feat_std, 
-                               dtype=np.float32)
+        feat_mean = np.array(feat_mean,
+                             dtype=np.float32)
+        feat_std = np.array(feat_std,
+                            dtype=np.float32)
     # 平均/標準偏差ファイルをコピーする
     shutil.copyfile(mean_std_file,
                     os.path.join(output_dir, 'mean_std.txt'))
@@ -212,7 +212,7 @@ if __name__ == "__main__":
     token_list = {0: '<blank>'}
     with open(token_list_path, mode='r') as f:
         # 1行ずつ読み込む
-        for line in f: 
+        for line in f:
             # 読み込んだ行をスペースで区切り，
             # リスト型の変数にする
             parts = line.split()
@@ -221,14 +221,14 @@ if __name__ == "__main__":
 
     # トークン数(blankを含む)
     num_tokens = len(token_list)
-    
+
     # ニューラルネットワークモデルを作成する
     # 入力の次元数は特徴量の次元数，
     # 出力の次元数はトークン数となる
     model = MyCTCModel(dim_in=feat_dim,
                        dim_enc_hid=hidden_dim,
                        dim_enc_proj=projection_dim,
-                       dim_out=num_tokens, 
+                       dim_out=num_tokens,
                        enc_num_layers=num_layers,
                        enc_bidirectional=bidirectional,
                        enc_sub_sample=sub_sample,
@@ -312,8 +312,8 @@ if __name__ == "__main__":
     # ログファイルの準備
     log_file = open(os.path.join(output_dir,
                                  'log.txt'),
-                                 mode='w')
-    log_file.write('epoch\ttrain loss\t'\
+                    mode='w')
+    log_file.write('epoch\ttrain loss\t'
                    'train err\tvalid loss\tvalid err')
 
     # エポックの数だけループ
@@ -321,11 +321,11 @@ if __name__ == "__main__":
         # early stopフラグが立っている場合は，
         # 学習を打ち切る
         if early_stop_flag:
-            print('    Early stopping.'\
-                  ' (early_stop_threshold = %d)' \
+            print('    Early stopping.'
+                  ' (early_stop_threshold = %d)'
                   % (early_stop_threshold))
-            log_file.write('\n    Early stopping.'\
-                           ' (early_stop_threshold = %d)' \
+            log_file.write('\n    Early stopping.'
+                           ' (early_stop_threshold = %d)'
                            % (early_stop_threshold))
             break
 
@@ -387,14 +387,14 @@ if __name__ == "__main__":
                 outputs = F.log_softmax(outputs, dim=2)
 
                 # 損失値を計算する．このとき，CTCLossへの入力は
-                # [フレーム数 x バッチサイズ x クラス数] 
+                # [フレーム数 x バッチサイズ x クラス数]
                 # である必要があるため，テンソルの0軸と1軸を
                 # 転置(transpose(0,1))した上で入力する
                 loss = criterion(outputs.transpose(0, 1),
                                  labels,
                                  out_lens,
                                  label_lens)
-                
+
                 # 訓練フェーズの場合は，誤差逆伝搬を実行し，
                 # モデルパラメータを更新する
                 if phase == 'train':
@@ -402,9 +402,9 @@ if __name__ == "__main__":
                     loss.backward()
                     # Cliping Gradient により勾配が
                     # 閾値以下になるよう調整する
-                    torch.nn.utils.clip_grad_norm_(\
-                                              model.parameters(),
-                                              clip_grad_threshold)
+                    torch.nn.utils.clip_grad_norm_(
+                        model.parameters(),
+                        clip_grad_threshold)
                     # オプティマイザにより，パラメータを更新する
                     optimizer.step()
 
@@ -428,7 +428,7 @@ if __name__ == "__main__":
                         for m in labels[n][:label_lens[n]].cpu().numpy():
                             reference.append(token_list[m])
                         # 認識誤りを計算
-                        (error, substitute, 
+                        (error, substitute,
                          delete, insert, ref_length) = \
                             levenshtein.calculate_error(hypothesis,
                                                         reference)
@@ -445,12 +445,12 @@ if __name__ == "__main__":
             #
             # このフェーズにおいて，1エポック終了
             # 損失値，認識エラー率，モデルの保存等を行う
-            # 
+            #
 
             # 損失値の累積値を，処理した発話数で割る
             epoch_loss = total_loss / total_utt
             # 画面とログファイルに出力する
-            print('    %s loss: %f' \
+            print('    %s loss: %f'
                   % (phase, epoch_loss))
             log_file.write('%.6f\t' % (epoch_loss))
             # 履歴に加える
@@ -461,10 +461,10 @@ if __name__ == "__main__":
                 # 総誤りトークン数を，
                 # 総トークン数で割ってエラー率に換算
                 epoch_error = 100.0 * total_error \
-                            / total_token_length
+                    / total_token_length
                 # 画面とログファイルに出力する
-                print('    %s token error rate: %f %%' \
-                    % (phase, epoch_error))
+                print('    %s token error rate: %f %%'
+                      % (phase, epoch_error))
                 log_file.write('%.6f\t' % (epoch_error))
                 # 履歴に加える
                 error_history[phase].append(epoch_error)
@@ -480,7 +480,7 @@ if __name__ == "__main__":
                     # 損失値が最低値を更新した場合は，
                     # その時のモデルを保存する
                     best_loss = epoch_loss
-                    torch.save(model.state_dict(), 
+                    torch.save(model.state_dict(),
                                output_dir+'/best_model.pt')
                     best_epoch = epoch
                     # Early stopping判定用の
@@ -492,7 +492,7 @@ if __name__ == "__main__":
                         # かつlr_decay_start_epoch以上の
                         # エポックに達している場合
                         if counter_for_early_stop+1 \
-                               >= early_stop_threshold:
+                                >= early_stop_threshold:
                             # 更新していないエポックが，
                             # 閾値回数以上続いている場合，
                             # Early stopping フラグを立てる
@@ -503,20 +503,20 @@ if __name__ == "__main__":
                             # 学習率を減衰させて学習続行
                             if lr_decay_factor < 1.0:
                                 for i, param_group \
-                                      in enumerate(\
-                                      optimizer.param_groups):
+                                    in enumerate(
+                                        optimizer.param_groups):
                                     if i == 0:
                                         lr = param_group['lr']
                                         dlr = lr_decay_factor \
                                             * lr
-                                        print('    (Decay '\
-                                          'learning rate:'\
-                                          ' %f -> %f)' \
-                                          % (lr, dlr))
-                                        log_file.write(\
-                                          '(Decay learning'\
-                                          ' rate: %f -> %f)'\
-                                           % (lr, dlr))
+                                        print('    (Decay '
+                                              'learning rate:'
+                                              ' %f -> %f)'
+                                              % (lr, dlr))
+                                        log_file.write(
+                                            '(Decay learning'
+                                            ' rate: %f -> %f)'
+                                            % (lr, dlr))
                                     param_group['lr'] = dlr
                             # Early stopping判定用の
                             # カウンタを増やす
@@ -526,38 +526,38 @@ if __name__ == "__main__":
     # 全エポック終了
     # 学習済みモデルの保存とログの書き込みを行う
     #
-    print('---------------Summary'\
+    print('---------------Summary'
           '------------------')
-    log_file.write('\n---------------Summary'\
+    log_file.write('\n---------------Summary'
                    '------------------\n')
 
     # 最終エポックのモデルを保存する
-    torch.save(model.state_dict(), 
-               os.path.join(output_dir,'final_model.pt'))
-    print('Final epoch model -> %s/final_model.pt' \
+    torch.save(model.state_dict(),
+               os.path.join(output_dir, 'final_model.pt'))
+    print('Final epoch model -> %s/final_model.pt'
           % (output_dir))
-    log_file.write('Final epoch model ->'\
-                   ' %s/final_model.pt\n' \
+    log_file.write('Final epoch model ->'
+                   ' %s/final_model.pt\n'
                    % (output_dir))
 
     # 最終エポックの情報
     for phase in ['train', 'validation']:
         # 最終エポックの損失値を出力
-        print('    %s loss: %f' \
+        print('    %s loss: %f'
               % (phase, loss_history[phase][-1]))
-        log_file.write('    %s loss: %f\n' \
+        log_file.write('    %s loss: %f\n'
                        % (phase, loss_history[phase][-1]))
-        # 最終エポックのエラー率を出力    
+        # 最終エポックのエラー率を出力
         if evaluate_error[phase]:
-            print('    %s token error rate: %f %%' \
-                % (phase, error_history[phase][-1]))
-            log_file.write('    %s token error rate: %f %%\n' \
-                % (phase, error_history[phase][-1]))
+            print('    %s token error rate: %f %%'
+                  % (phase, error_history[phase][-1]))
+            log_file.write('    %s token error rate: %f %%\n'
+                           % (phase, error_history[phase][-1]))
         else:
-            print('    %s token error rate: (not evaluated)' \
-                % (phase))
-            log_file.write('    %s token error rate: '\
-                '(not evaluated)\n' % (phase))
+            print('    %s token error rate: (not evaluated)'
+                  % (phase))
+            log_file.write('    %s token error rate: '
+                           '(not evaluated)\n' % (phase))
 
     # ベストエポックの情報
     # (validationの損失が最小だったエポック)
