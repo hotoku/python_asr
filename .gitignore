@@ -10,3 +10,4 @@ data
 .python-version
 .dir-locals.el
 .ipynb_checkpoints/
+notebooks/testdata/
